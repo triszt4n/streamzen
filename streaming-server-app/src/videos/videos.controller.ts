@@ -1,32 +1,61 @@
-import { Controller } from '@nestjs/common';
-import { VideosService } from './videos.service';
+import {
+  BadRequestException,
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import LocalFilesInterceptor from 'src/utils/localFiles.interceptor';
+import { LivesService } from './lives.service';
+import { ProcessingService } from './processing.service';
+import { VodsService } from './vods.service';
 
 @Controller('videos')
 export class VideosController {
-  constructor(private readonly videosService: VideosService) {}
+  constructor(
+    private vodsService: VodsService,
+    private livesService: LivesService,
+    private processingService: ProcessingService,
+  ) {}
 
-  // @Post()
-  // create(@Body() createVideoDto: CreateVideoDto) {
-  //   return this.videosService.create(createVideoDto);
-  // }
+  @Post()
+  @UseInterceptors(
+    LocalFilesInterceptor({
+      fieldName: 'file',
+      path: '/videos',
+      fileFilter: (request, file, callback) => {
+        if (!file.mimetype.includes('video')) {
+          return callback(
+            new BadRequestException('Provide a valid video'),
+            false,
+          );
+        }
+        callback(null, true);
+      },
+    }),
+  )
+  async uploadVideo(@UploadedFile() file: Express.Multer.File) {
+    return this.vodsService.create({
+      filename: file.originalname,
+      path: file.path,
+      mimetype: file.mimetype,
+      title: file.originalname,
+    });
+  }
 
-  // @Get()
-  // findAll() {
-  //   return this.videosService.findAll();
-  // }
+  @Post('/vods/:id')
+  async startProcess(@Param('id', ParseIntPipe) id: number) {
+    return this.processingService.processVideo(id);
+  }
 
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.videosService.findOne(+id);
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateVideoDto: UpdateVideoDto) {
-  //   return this.videosService.update(+id, updateVideoDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.videosService.remove(+id);
-  // }
+  @Get()
+  async findAll() {
+    return {
+      vods: this.vodsService.findAll(),
+      lives: this.livesService.findAll(),
+    };
+  }
 }
