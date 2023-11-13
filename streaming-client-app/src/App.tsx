@@ -5,7 +5,7 @@ function App() {
   return (
     <>
       <div>Hello there</div>
-      <VideoProto src="https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8" />
+      <VideoProto src="http://localhost:3000/stream/title/output.m3u8" />
     </>
   );
 }
