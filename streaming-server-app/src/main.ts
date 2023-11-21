@@ -1,4 +1,9 @@
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  Logger,
+  ValidationPipe,
+} from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -11,6 +16,8 @@ async function bootstrap() {
       ? ['log', 'error', 'warn']
       : ['log', 'error', 'warn', 'debug'],
   });
+
+  const configService = app.get(ConfigService);
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -34,10 +41,14 @@ async function bootstrap() {
   }
 
   app.enableCors({
-    origin: process.env.FRONTEND_HOST,
+    origin: isProduction ? configService.get<string>('FRONTEND_HOST') : '*',
   });
   app.enableShutdownHooks();
 
-  await app.listen(process.env.PORT || 3000);
+  const port = configService.get<number>('PORT');
+  await app.listen(port, () => {
+    Logger.debug(`Listening at http://localhost:${port}`);
+  });
 }
+
 bootstrap();

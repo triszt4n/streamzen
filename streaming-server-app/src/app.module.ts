@@ -17,6 +17,7 @@ import { VideosModule } from './videos/videos.module';
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({
       validationSchema: Joi.object({
+        PORT: Joi.number().default(3000),
         FRONTEND_HOST: Joi.string().required(),
         DATABASE_URL: Joi.string().required(),
         FFMPEG_PATH: Joi.string().required(),
