@@ -1,23 +1,16 @@
 {
-  "editor.tabSize": 2,
-  "editor.insertSpaces": true,
-  "editor.renderWhitespace": "boundary",
-  "editor.rulers": [140],
-  "editor.formatOnSave": true,
-  "files.encoding": "utf8",
-  "files.trimTrailingWhitespace": true,
-  "files.insertFinalNewline": true,
   "search.exclude": {
-    "**/public/**": true,
-    "**/node_modules/**": true
+    "**/.yarn": true,
+    "**/.pnp.*": true,
+    "**/node_modules": true,
+    "**/dist": true,
   },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "typescript.enablePromptUseWorkspaceTsdk": true,
+  "files.eol": "\n",
+  "editor.tabSize": 2,
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.organizeImports": true,
-    "source.formatDocument": true,
     "source.fixAll.eslint": true
   },
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
-  }
+  "typescript.tsdk": "node_modules\\typescript\\lib",
 }

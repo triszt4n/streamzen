@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { VodDto } from './dto/create-video.dto';
+import { VodDto } from './dto/vod.dto';
 
 @Injectable()
 export class VodsService {

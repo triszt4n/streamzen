@@ -1,0 +1,24 @@
+{
+  "name": "streaming-project",
+  "packageManager": "yarn@4.0.2",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "yarn workspace frontend run dev",
+    "dev:backend": "yarn workspace backend run start:dev",
+    "docker:migrate": "yarn workspace backend run docker:migrate",
+    "docker:db": "yarn workspace backend run docker:db",
+    "docker:seed": "yarn workspace backend run docker:seed",
+    "docker": "yarn workspace backend run docker",
+    "docker:build": "yarn workspace backend run docker:build",
+    "generate": "yarn workspace frontend run generate",
+    "prisma": "yarn workspace backend dlx prisma",
+    "prisma:seed": "yarn workspace backend run seed",
+    "prisma:generate": "yarn workspace backend run prisma:generate",
+    "prisma:push": "yarn workspace backend dlx prisma db push",
+    "prisma:reset": "yarn workspace backend dlx prisma db push --force-reset ; yarn workspace backend run seed",
+    "prisma:migrate": "yarn workspace backend run migrate:dev"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}
