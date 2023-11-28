@@ -24,6 +24,7 @@ model User {
 
   createdVods        Vod[]
   createdCollections Collection[]
+  Live               Live[]
 }
 
 model Collection {
@@ -38,21 +39,44 @@ model Collection {
 
   createdBy   User @relation(fields: [createdById], references: [id])
   createdById Int
+
+  vods Vod[]
 }
 
 model Vod {
   id Int @id @default(autoincrement())
 
-  // content
   title        String
   descMarkdown String
   originalDate DateTime
 
-  // technical
-  filename String
-  path     String
-  mimetype String
-  status   ProcessStatus @default(UNPROCESSED)
+  folderName String
+  fileName   String
+  ext        String
+  status     ProcessState @default(UNPROCESSED)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  createdBy   User @relation(fields: [createdById], references: [id])
+  createdById Int
+
+  Collection   Collection? @relation(fields: [collectionId], references: [id])
+  collectionId Int?
+}
+
+model Live {
+  id Int @id @default(autoincrement())
+
+  title        String
+  descMarkdown String
+  airDate      DateTime
+
+  localRtmpUrl       String?
+  localRtmpStreamKey String?
+  embedUrl           String?
+  liveType           LiveType  @default(LOCAL_RTMP)
+  state              LiveState @default(PREMIERE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,23 +85,19 @@ model Vod {
   createdById Int
 }
 
-model Live {
-  id        Int        @id @default(autoincrement())
-  title     String
-  filename  String
-  path      String
-  mimetype  String
-  status    LiveStatus @default(ON_AIR)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-}
-
-enum LiveStatus {
+enum LiveState {
+  PREMIERE
   ON_AIR
   OFF_AIR
 }
 
-enum ProcessStatus {
+enum LiveType {
+  LOCAL_RTMP
+  EMBED_YOUTUBE
+  EMBED_TWITCH
+}
+
+enum ProcessState {
   UNPROCESSED
   PROCESSING
   PROCESSED
