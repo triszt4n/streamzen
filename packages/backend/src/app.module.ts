@@ -7,6 +7,9 @@ import { AppController } from './app.controller';
 import { PrismaModule } from './prisma/prisma.module';
 import { StreamModule } from './stream/stream.module';
 import { VideosModule } from './videos/videos.module';
+import { CollectionsModule } from './collections/collections.module';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -22,9 +25,15 @@ import { VideosModule } from './videos/videos.module';
         DATABASE_URL: Joi.string().required(),
         FFMPEG_PATH: Joi.string().required(),
         UPLOADED_FILES_DESTINATION: Joi.string().required(),
+        AUTHSCH_HOST: Joi.string().uri().required(),
+        AUTHSCH_CLIENT_ID: Joi.string().required(),
+        AUTHSCH_CLIENT_SECRET: Joi.string().required(),
       }),
     }),
     StreamModule,
+    CollectionsModule,
+    AuthModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [],

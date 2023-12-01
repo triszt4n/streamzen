@@ -7,6 +7,7 @@ import { StreamService } from 'src/stream/stream.service';
 import FfmpegEndedEvent from 'src/videos/events/ffmpeg-ended.event';
 import FfmpegErrorEvent from 'src/videos/events/ffmpeg-error.event';
 import { VodsService } from './vods.service';
+import { ProcessState } from '@prisma/client';
 
 @Injectable()
 export class ProcessingService {
@@ -22,13 +23,13 @@ export class ProcessingService {
 
   // todo make async
   async processVideo(videoId: number) {
-    // await this.vodsService.update(videoId, { status: 'PROCESSING' });
+    const vod = await this.vodsService.updateState(
+      videoId,
+      ProcessState.PROCESSING,
+    );
+    const { folderName, fileName, ext } = vod;
 
-    // todo replace with actual video and smarter options
-    const folder = 'title';
-    const filename = 'video';
-    const ext = 'mp4';
-    ffmpeg(join(process.cwd(), 'media', folder, filename + '.' + ext), {
+    ffmpeg(join(process.cwd(), 'media', folderName, fileName + '.' + ext), {
       timeout: 432000,
     })
       .addOptions([
@@ -40,7 +41,7 @@ export class ProcessingService {
         '-hls_list_size 0',
         '-f hls',
       ])
-      .output(join(process.cwd(), 'media-out', folder, filename + '.m3u8'))
+      .output(join(process.cwd(), 'media-out', folderName, fileName + '.m3u8'))
       .on('start', (commandLine) => {
         this.logger.debug('Processing started for: ' + commandLine);
       })

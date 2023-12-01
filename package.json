@@ -3,22 +3,23 @@
   "packageManager": "yarn@4.0.2",
   "private": true,
   "scripts": {
+    "dev": "concurrently -n \"frontend,backend\" -c \"bgBlue.bold,bgMagenta.bold\" \"yarn dev:frontend\" \"yarn dev:backend\"",
     "dev:frontend": "yarn workspace frontend run dev",
     "dev:backend": "yarn workspace backend run start:dev",
-    "docker:migrate": "yarn workspace backend run docker:migrate",
-    "docker:db": "yarn workspace backend run docker:db",
-    "docker:seed": "yarn workspace backend run docker:seed",
-    "docker": "yarn workspace backend run docker",
-    "docker:build": "yarn workspace backend run docker:build",
-    "generate": "yarn workspace frontend run generate",
-    "prisma": "yarn workspace backend dlx prisma",
-    "prisma:seed": "yarn workspace backend run seed",
-    "prisma:generate": "yarn workspace backend run prisma:generate",
-    "prisma:push": "yarn workspace backend dlx prisma db push",
-    "prisma:reset": "yarn workspace backend dlx prisma db push --force-reset ; yarn workspace backend run seed",
-    "prisma:migrate": "yarn workspace backend run migrate:dev"
+    "prisma:generate": "yarn workspace backend run prisma generate",
+    "prisma:migrate": "yarn workspace backend run prisma migrate dev"
   },
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "@casl/ability": "^6.5.0",
+    "@casl/prisma": "^1.4.1",
+    "@nestjs/jwt": "^10.2.0",
+    "passport-jwt": "^4.0.1",
+    "passport-oauth2": "^1.7.0"
+  }
 }

@@ -32,7 +32,6 @@ model Collection {
 
   title        String
   descMarkdown String
-  originalDate DateTime
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -50,10 +49,10 @@ model Vod {
   descMarkdown String
   originalDate DateTime
 
-  folderName String
+  folderName String       @unique
   fileName   String
   ext        String
-  status     ProcessState @default(UNPROCESSED)
+  state      ProcessState @default(UNPROCESSED)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -61,8 +60,10 @@ model Vod {
   createdBy   User @relation(fields: [createdById], references: [id])
   createdById Int
 
-  Collection   Collection? @relation(fields: [collectionId], references: [id])
+  collection   Collection? @relation(fields: [collectionId], references: [id])
   collectionId Int?
+
+  // todo: contributing bss users
 }
 
 model Live {
@@ -83,6 +84,8 @@ model Live {
 
   createdBy   User @relation(fields: [createdById], references: [id])
   createdById Int
+
+  // todo: contributing bss users
 }
 
 enum LiveState {
