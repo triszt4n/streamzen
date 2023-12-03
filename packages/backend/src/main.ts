@@ -1,6 +1,7 @@
 import {
   ClassSerializerInterceptor,
   Logger,
+  RequestMethod,
   ValidationPipe,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -17,6 +18,9 @@ async function bootstrap() {
       : ['log', 'error', 'warn', 'debug'],
   });
 
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: '', method: RequestMethod.GET }],
+  });
   const configService = app.get(ConfigService);
 
   app.useGlobalPipes(

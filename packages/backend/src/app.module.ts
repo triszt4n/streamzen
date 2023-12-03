@@ -10,12 +10,14 @@ import { VideosModule } from './videos/videos.module';
 import { CollectionsModule } from './collections/collections.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
   imports: [
     VideosModule,
     ConfigModule.forRoot(),
     PrismaModule,
+    CacheModule.register(),
     EventEmitterModule.forRoot(),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot({

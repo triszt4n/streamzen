@@ -1,13 +1,13 @@
 import Hls from "hls.js";
 import React, { useEffect } from "react";
 
-interface VideoProps {
+interface Props {
   src: string;
   width?: number;
   height?: number;
 }
 
-const VideoProto: React.FC<VideoProps> = ({
+export const VideoPlayer: React.FC<Props> = ({
   src,
   width = 640,
   height = 360,
@@ -21,9 +21,9 @@ const VideoProto: React.FC<VideoProps> = ({
         console.log("video and hls.js are now bound together !");
       });
 
-      hls.on(Hls.Events.MANIFEST_PARSED, (event, data) => {
+      hls.on(Hls.Events.MANIFEST_PARSED, (_, data) => {
         console.log(
-          "manifest loaded, found " + data.levels.length + " quality level"
+          "manifest loaded, found " + data.levels.length + " quality level",
         );
       });
 
@@ -43,5 +43,3 @@ const VideoProto: React.FC<VideoProps> = ({
     </video>
   );
 };
-
-export default VideoProto;

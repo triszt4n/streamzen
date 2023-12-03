@@ -2,10 +2,12 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
   Post,
+  Put,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -16,6 +18,9 @@ import { VodsService } from './services/vods.service';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
 import { CreateVodDto } from './dto/create-vod.dto';
 import { User } from '@prisma/client';
+import { UpdateVodDto } from './dto/update-vod.dto';
+import { CreateLiveDto } from './dto/create-live.dto';
+import { UpdateLiveDto } from './dto/update-live.dto';
 
 @Controller('videos')
 export class VideosController {
@@ -61,15 +66,39 @@ export class VideosController {
 
   @Get('vods/:id/processing')
   async getProcessState(@Param('id', ParseIntPipe) id: number) {
-    // todo: get from ffmpeg
-    return id;
+    return this.processingService.getProcessPercent(id);
   }
 
-  async updateVod() {} // todo
-  async deleteVod() {} // todo
-  async createLive() {} // todo
-  async updateLive() {} // todo
-  async deleteLive() {} // todo
+  @Put('vods/:id')
+  async updateVod(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateVodDto,
+  ) {
+    return this.vodsService.update(id, dto);
+  }
+
+  @Delete('vods/:id')
+  async deleteVod(@Param('id', ParseIntPipe) id: number) {
+    return this.vodsService.delete(id);
+  }
+
+  @Post('lives')
+  async createLive(@Body() dto: CreateLiveDto, @CurrentUser() user: User) {
+    return this.livesService.create(dto, user);
+  }
+
+  @Put('lives/:id')
+  async updateLive(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateLiveDto,
+  ) {
+    return this.livesService.update(id, dto);
+  }
+
+  @Delete('lives/:id')
+  async deleteLive(@Param('id', ParseIntPipe) id: number) {
+    return this.livesService.delete(id);
+  }
 
   @Get()
   async findAll() {

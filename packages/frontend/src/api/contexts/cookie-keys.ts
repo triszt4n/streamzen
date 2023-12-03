@@ -1,0 +1,3 @@
+export enum CookieKeys {
+  BSSTREAMING_JWT_TOKEN = "BSSTREAMING_JWT_TOKEN",
+}

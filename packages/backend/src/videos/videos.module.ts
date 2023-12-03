@@ -5,9 +5,10 @@ import { LivesService } from './services/lives.service';
 import { ProcessingService } from './services/processing.service';
 import { VideosController } from './videos.controller';
 import { VodsService } from './services/vods.service';
+import { CacheModule } from '@nestjs/cache-manager';
 
 @Module({
-  imports: [PrismaModule, ConfigModule],
+  imports: [PrismaModule, ConfigModule, CacheModule],
   controllers: [VideosController],
   providers: [VodsService, LivesService, ProcessingService],
 })

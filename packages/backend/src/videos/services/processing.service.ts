@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { EventEmitter2, OnEvent } from '@nestjs/event-emitter';
 import * as ffmpeg from 'fluent-ffmpeg';
@@ -8,6 +8,8 @@ import FfmpegEndedEvent from 'src/videos/events/ffmpeg-ended.event';
 import FfmpegErrorEvent from 'src/videos/events/ffmpeg-error.event';
 import { VodsService } from './vods.service';
 import { ProcessState } from '@prisma/client';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
 
 @Injectable()
 export class ProcessingService {
@@ -15,6 +17,7 @@ export class ProcessingService {
     private eventEmitter: EventEmitter2,
     private configService: ConfigService,
     private vodsService: VodsService,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {
     ffmpeg.setFfmpegPath(this.configService.get<string>('FFMPEG_PATH'));
   }
@@ -27,7 +30,7 @@ export class ProcessingService {
       videoId,
       ProcessState.PROCESSING,
     );
-    const { folderName, fileName, ext } = vod;
+    const { id, folderName, fileName, ext } = vod;
 
     ffmpeg(join(process.cwd(), 'media', folderName, fileName + '.' + ext), {
       timeout: 432000,
@@ -44,6 +47,7 @@ export class ProcessingService {
       .output(join(process.cwd(), 'media-out', folderName, fileName + '.m3u8'))
       .on('start', (commandLine) => {
         this.logger.debug('Processing started for: ' + commandLine);
+        this.cacheManager.set(`process.${id}`, 0, 60000);
       })
       .on('end', () => {
         this.logger.debug('Processing ended');
@@ -65,7 +69,19 @@ export class ProcessingService {
           }),
         );
       })
+      .on('progress', (progress) => {
+        this.cacheManager.set(`process.${id}`, progress.percent, 60000);
+      })
       .run();
+  }
+
+  async getProcessPercent(videoId: number): Promise<string | null> {
+    const percent = await this.cacheManager.get(`process.${videoId}`);
+    if (percent) {
+      return percent.toString();
+    } else {
+      return null;
+    }
   }
 
   @OnEvent('ffmpeg.ended')

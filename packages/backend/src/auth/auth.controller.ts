@@ -6,10 +6,14 @@ import { CurrentUser } from './decorator/current-user.decorator';
 import { JwtAuth } from './decorator/jwt-auth.decorator';
 import { JwtUserDto } from './dto/jwtUser.dto';
 import { ApiController } from 'src/utils/api-controller.decorator';
+import { ConfigService } from '@nestjs/config';
 
 @ApiController('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly configService: ConfigService,
+  ) {}
 
   @UseGuards(AuthGuard('authsch'))
   @Get('login')
@@ -21,7 +25,7 @@ export class AuthController {
   oauthRedirect(@CurrentUser() user: User) {
     const { jwt } = this.authService.login(user);
     return {
-      url: `${process.env.FRONTEND_AUTHORIZED_URL}?jwt=${jwt}`,
+      url: `${this.configService.get('FRONTEND_HOST')}/welcome?jwt=${jwt}`,
     };
   }
 

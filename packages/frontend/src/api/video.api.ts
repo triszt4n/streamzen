@@ -7,7 +7,7 @@ export interface Video {
   customUrl: string;
 }
 
-export default class VideoApi {
+export class VideoApi {
   private static instance: VideoApi;
 
   private constructor() {}
