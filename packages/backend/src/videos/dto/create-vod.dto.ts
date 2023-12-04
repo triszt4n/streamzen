@@ -1,5 +1,4 @@
 import {
-  IsDate,
   IsLowercase,
   IsNotEmpty,
   IsString,
@@ -18,7 +17,6 @@ export class CreateVodDto {
   // @MaxLength(1000)
   descMarkdown: string;
 
-  @IsDate()
   @IsNotEmpty()
   originalDate: Date;
 
@@ -26,7 +24,7 @@ export class CreateVodDto {
   @IsLowercase()
   @IsNotEmpty()
   @MinLength(3)
-  @MaxLength(64)
+  @MaxLength(20)
   @Matches(/^[a-z0-9-]+$/, {
     message: 'slug must be lowercase alphanumeric with dashes',
   })
@@ -36,7 +34,7 @@ export class CreateVodDto {
   @IsLowercase()
   @IsNotEmpty()
   @MinLength(3)
-  @MaxLength(64)
+  @MaxLength(20)
   @Matches(/^[a-z0-9-]+$/, {
     message: 'slug must be lowercase alphanumeric with dashes',
   })
@@ -45,9 +43,9 @@ export class CreateVodDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(1)
-  @MaxLength(16)
-  @Matches(/^\.[a-z0-9]+$/, {
-    message: 'extension must be lowercase alphanumeric and starting with a dot',
+  @MaxLength(10)
+  @Matches(/^[a-z0-9]+$/, {
+    message: 'extension must be lowercase alphanumeric (no dots)',
   })
   ext: string;
 

@@ -60,4 +60,15 @@ export class UsersService {
   async remove(id: number) {
     return this.prisma.user.delete({ where: { id: id } });
   }
+
+  async findAllVideosCreatedByUser(user: User) {
+    return this.prisma.user.findUnique({
+      where: { id: user.id },
+      include: {
+        createdVods: true,
+        createdLives: true,
+        createdCollections: true,
+      },
+    });
+  }
 }

@@ -2,6 +2,7 @@ import {
   CallHandler,
   ExecutionContext,
   Injectable,
+  Logger,
   NestInterceptor,
   Type,
   mixin,
@@ -10,6 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { DiskStorageOptions, diskStorage } from 'multer';
+import { Request } from 'express';
 
 interface LocalFilesInterceptorOptions {
   fieldName: string;
@@ -27,11 +29,16 @@ function LocalFilesInterceptor(
     constructor(configService: ConfigService) {
       this.mediaFolderDest = configService.get('UPLOADED_FILES_DESTINATION');
     }
+    private readonly logger = new Logger(Interceptor.name);
 
     intercept(context: ExecutionContext, next: CallHandler<any>) {
       const { folderName, fileName, ext } = context
         .switchToHttp()
-        .getRequest().body;
+        .getRequest<Request>().body;
+      this.logger.debug(
+        'body in interceptor',
+        Object.keys(context.switchToHttp().getRequest().body),
+      );
 
       const destination = `${this.mediaFolderDest}${options.basePath ?? ''}/${
         folderName ?? ''

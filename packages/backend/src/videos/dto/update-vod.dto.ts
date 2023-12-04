@@ -1,4 +1,4 @@
-import { IsDate, IsString, MinLength } from 'class-validator';
+import { IsString, MinLength } from 'class-validator';
 
 export class UpdateVodDto {
   @IsString()
@@ -9,7 +9,6 @@ export class UpdateVodDto {
   // @MaxLength(1000)
   descMarkdown?: string;
 
-  @IsDate()
   originalDate?: Date;
 
   // todo: contributing users

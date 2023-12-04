@@ -1,5 +1,5 @@
 import { LiveState } from '@prisma/client';
-import { IsDate, IsEnum, IsString, IsUrl, MinLength } from 'class-validator';
+import { IsEnum, IsString, IsUrl, MinLength } from 'class-validator';
 
 export class UpdateLiveDto {
   @IsString()
@@ -10,7 +10,6 @@ export class UpdateLiveDto {
   // @MaxLength(1000)
   descMarkdown?: string;
 
-  @IsDate()
   airDate?: Date;
 
   @IsString()

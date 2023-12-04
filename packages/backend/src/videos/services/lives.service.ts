@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { User } from '@prisma/client';
+import { LiveState, User } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLiveDto } from '../dto/create-live.dto';
 import { UpdateLiveDto } from '../dto/update-live.dto';
@@ -10,7 +10,22 @@ export class LivesService {
   private readonly logger = new Logger(LivesService.name);
 
   async findAll() {
-    return this.prismaService.live.findMany();
+    return this.prismaService.live.findMany({ include: { createdBy: true } });
+  }
+
+  async findAllPremierAndOnAir() {
+    return this.prismaService.live.findMany({
+      where: {
+        OR: [
+          {
+            state: LiveState.PREMIERE,
+          },
+          {
+            state: LiveState.ON_AIR,
+          },
+        ],
+      },
+    });
   }
 
   async findOne(id: number) {
@@ -27,7 +42,7 @@ export class LivesService {
       data: {
         title,
         descMarkdown,
-        airDate,
+        airDate: airDate.toISOString(),
         liveType,
         embedUrl,
         state,
@@ -49,7 +64,7 @@ export class LivesService {
       data: {
         title,
         descMarkdown,
-        airDate,
+        airDate: airDate && airDate.toISOString(),
         embedUrl,
         state,
       },

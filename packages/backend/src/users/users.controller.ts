@@ -31,14 +31,14 @@ export class UsersController {
 
   @Get(':id')
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.usersService.findOne(id);
+    return this.usersService.findOne(id);
   }
 
   @Post(':id/promote')
   // @RequiredPermission(Permissions.PromoteUser)
   async promote(@Param('id', ParseIntPipe) id: number) {
     try {
-      return await this.usersService.promoteUser(id, 'ADMIN');
+      return this.usersService.promoteUser(id, 'ADMIN');
     } catch {
       throw new NotFoundException('A felhasználó nem található!');
     }
@@ -48,7 +48,7 @@ export class UsersController {
   // @RequiredPermission(Permissions.Delete)
   async remove(@Param('id', ParseIntPipe) id: number) {
     try {
-      return await this.usersService.remove(id);
+      return this.usersService.remove(id);
     } catch {
       throw new NotFoundException('A felhasználó nem található!');
     }

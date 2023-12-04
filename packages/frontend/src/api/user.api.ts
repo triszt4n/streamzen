@@ -1,13 +1,5 @@
 import axios from "axios";
-
-export interface User {
-  id: number;
-  authSchId: string;
-  firstName: string;
-  fullName: string;
-  email: string;
-  isAdmin: boolean;
-}
+import { User } from "./types";
 
 export class UserApi {
   private static instance: UserApi;
@@ -26,5 +18,14 @@ export class UserApi {
       "/api/users/profile",
     );
     return response.data;
+  }
+
+  async getAllUsers() {
+    const response = await axios.get<User[]>("/api/users");
+    return response.data.map((user) => ({
+      ...user,
+      createdAt: new Date(user.createdAt),
+      updatedAt: new Date(user.updatedAt),
+    }));
   }
 }

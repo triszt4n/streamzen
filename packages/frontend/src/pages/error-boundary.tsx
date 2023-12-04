@@ -9,7 +9,7 @@ export const ErrorBoundary: React.FC = () => {
   return (
     <Layout>
       <Flex justifyContent="center">
-        <Heading my={12}>Error occured!</Heading>
+        <Heading>Error occured!</Heading>
       </Flex>
     </Layout>
   );

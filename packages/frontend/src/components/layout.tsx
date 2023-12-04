@@ -1,8 +1,8 @@
 import { Box, Flex } from "@chakra-ui/react";
 import { PropsWithChildren } from "react";
-import { Helmet } from "react-helmet";
 import { Footer } from "./footer";
 import { Navbar } from "./navbar";
+import { Helmet } from "react-helmet-async";
 
 const Head: React.FC = () => {
   return (

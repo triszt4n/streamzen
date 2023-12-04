@@ -49,19 +49,11 @@ export const UserMenu: React.FC = () => {
         </Center>
         <br />
         <MenuDivider />
-        <MenuItem
-          onClick={() => {
-            alert("Not implemented yet");
-          }}
-        >
-          Your Videos
+        <MenuItem onClick={() => navigate(routeMap.createdVideos.path!)}>
+          Manage Videos
         </MenuItem>
-        <MenuItem
-          onClick={() => {
-            alert("Not implemented yet");
-          }}
-        >
-          Account Settings
+        <MenuItem onClick={() => navigate(routeMap.adminSettings.path!)}>
+          Admin Settings
         </MenuItem>
         <MenuItem
           onClick={() => {

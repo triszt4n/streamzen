@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateVodDto } from '../dto/create-vod.dto';
 import { ProcessState, User } from '@prisma/client';
@@ -7,6 +7,7 @@ import { UpdateVodDto } from '../dto/update-vod.dto';
 @Injectable()
 export class VodsService {
   constructor(private prismaService: PrismaService) {}
+  private readonly logger = new Logger(VodsService.name);
 
   async create(dto: CreateVodDto, user: User) {
     const { title, descMarkdown, originalDate, folderName, fileName, ext } =
@@ -15,7 +16,7 @@ export class VodsService {
       data: {
         title,
         descMarkdown,
-        originalDate,
+        originalDate: new Date(originalDate).toISOString(),
         folderName,
         fileName,
         ext,
@@ -29,7 +30,15 @@ export class VodsService {
   }
 
   async findAll() {
-    return this.prismaService.vod.findMany();
+    return this.prismaService.vod.findMany({ include: { createdBy: true } });
+  }
+
+  async findAllProcessed() {
+    return this.prismaService.vod.findMany({
+      where: {
+        state: ProcessState.PROCESSED,
+      },
+    });
   }
 
   async findAllFolderNames() {
@@ -53,7 +62,7 @@ export class VodsService {
       data: {
         title,
         descMarkdown,
-        originalDate,
+        originalDate: originalDate && originalDate.toISOString(),
       },
     });
   }

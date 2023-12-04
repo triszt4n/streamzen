@@ -9,6 +9,7 @@ import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { join } from 'path';
 
 async function bootstrap() {
   const isProduction = process.env.NODE_ENV === 'production';
@@ -48,6 +49,9 @@ async function bootstrap() {
     origin: isProduction ? configService.get<string>('FRONTEND_HOST') : '*',
   });
   app.enableShutdownHooks();
+  app.useStaticAssets(join(process.cwd(), 'media-out', 'public'), {
+    prefix: '/api/public',
+  });
 
   const port = configService.get<number>('PORT');
   await app.listen(port, () => {

@@ -1,6 +1,5 @@
 import { LiveState, LiveType } from '@prisma/client';
 import {
-  IsDate,
   IsEnum,
   IsNotEmpty,
   IsString,
@@ -19,7 +18,6 @@ export class CreateLiveDto {
   // @MaxLength(1000)
   descMarkdown: string;
 
-  @IsDate()
   @IsNotEmpty()
   airDate: Date;
 

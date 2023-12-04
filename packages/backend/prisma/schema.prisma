@@ -24,7 +24,7 @@ model User {
 
   createdVods        Vod[]
   createdCollections Collection[]
-  Live               Live[]
+  createdLives       Live[]
 }
 
 model Collection {
