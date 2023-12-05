@@ -1,4 +1,5 @@
 import { VideoApi } from "@/api/video.api";
+import { CollectionCard } from "@/components/collection-card";
 import { SimpleAlert } from "@/components/simple-alert";
 import { VideoCard } from "@/components/video-card";
 import { Box, Flex, Heading } from "@chakra-ui/react";
@@ -99,13 +100,11 @@ export const HomePage: React.FC = () => {
         {data?.collections.length
           ? data?.collections
               .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime()) // desc
-              .map((vod) => (
-                <VideoCard
-                  key={vod.id}
-                  path={`/vods/${vod.id}`}
-                  title={vod.title}
-                  folderName={vod.folderName}
-                  state={vod.state}
+              .map((collection) => (
+                <CollectionCard
+                  key={collection.id}
+                  path={`/collections/${collection.id}`}
+                  title={collection.title}
                 />
               ))
           : "None."}

@@ -7,10 +7,11 @@ import {
   Heading,
   Text,
   useColorModeValue,
+  Link as ChakraLink,
 } from "@chakra-ui/react";
 import Layout from "../components/layout";
 import { VideoPlayer } from "@/components/video-player";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { VideoApi } from "@/api/video.api";
 import { useMutation, useQuery } from "react-query";
 import { SimpleAlert } from "@/components/simple-alert";
@@ -104,8 +105,22 @@ export const VodPage: React.FC = () => {
             <Text fontStyle="italic" color={mutedColor}>
               Uploaded at: {data?.createdAt.toLocaleDateString("hu-HU")}
             </Text>
-            <Text fontStyle="italic" color={mutedColor} mb={6}>
+            <Text fontStyle="italic" color={mutedColor} mb={3}>
               Original date: {data?.originalDate.toLocaleDateString("hu-HU")}
+            </Text>
+            {data?.collection && (
+              <Text fontStyle="italic">
+                Part of collection:{" "}
+                <ChakraLink as={Link} to={`/users/${data?.collectionId}`}>
+                  {data?.collection?.title}
+                </ChakraLink>
+              </Text>
+            )}
+            <Text fontStyle="italic" mb={6}>
+              Creator:{" "}
+              <ChakraLink as={Link} to={`/users/${data?.createdBy?.id}`}>
+                {data?.createdBy?.fullName}
+              </ChakraLink>
             </Text>
           </Box>
           <ReactMarkdown

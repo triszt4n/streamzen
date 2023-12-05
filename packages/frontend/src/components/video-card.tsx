@@ -5,12 +5,12 @@ import {
   HStack,
   Heading,
   Image,
-  VStack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import React from "react";
 import { FaPlay } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
   title: string;
@@ -70,11 +70,7 @@ export const VideoCard: React.FC<Props> = ({
         {state && (
           <Badge colorScheme={getColorSchemeForState(state)}>{state}</Badge>
         )}
-        {user && (
-          <Text>
-            Creator: <Link to={`/users/${user?.id}`}>{user?.fullName}</Link>
-          </Text>
-        )}
+        {user && <Text>Uploaded by: {user.fullName}</Text>}
       </Box>
     </VStack>
   );

@@ -26,7 +26,8 @@
     "react-icons": "4.12.0",
     "react-markdown": "9.0.1",
     "react-query": "3.39.3",
-    "react-router-dom": "6.20.1"
+    "react-router-dom": "6.20.1",
+    "reregexp": "^1.6.1"
   },
   "devDependencies": {
     "@types/js-cookie": "3.0.6",

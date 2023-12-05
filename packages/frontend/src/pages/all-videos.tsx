@@ -4,7 +4,7 @@ import { SimpleAlert } from "@/components/simple-alert";
 import { VideoCard } from "@/components/video-card";
 import { routeMap } from "@/utils/routes";
 import { Box, Button, Flex, HStack, Heading } from "@chakra-ui/react";
-import { FaUpload, FaVideo } from "react-icons/fa";
+import { FaPlus, FaUpload, FaVideo } from "react-icons/fa";
 import { useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import Layout from "../components/layout";
@@ -24,16 +24,36 @@ export const AllVideosPage: React.FC = () => {
           title="Error loading videos."
         />
       )}
-      <Heading mb={4}>Manage videos, collections</Heading>
+      <Heading mb={4}>Manage videos</Heading>
       {isLoggedIn && (
-        <HStack justifyContent="end" mb={3}>
-          <Button leftIcon={<FaUpload />} as={Link} to={routeMap.upload.path!}>
-            Upload Video
-          </Button>
-          <Button leftIcon={<FaVideo />} as={Link} to={routeMap.newLive.path!}>
-            New Live
-          </Button>
-        </HStack>
+        <>
+          <HStack justifyContent="end" mb={3}>
+            <Button
+              leftIcon={<FaUpload />}
+              as={Link}
+              to={routeMap.upload.path!}
+            >
+              Upload Video
+            </Button>
+            <Button
+              leftIcon={<FaVideo />}
+              as={Link}
+              to={routeMap.newLive.path!}
+            >
+              New Live
+            </Button>
+          </HStack>
+          <HStack justifyContent="end" mb={3}>
+            <Button
+              variant="outline"
+              leftIcon={<FaPlus />}
+              as={Link}
+              to={routeMap.newCollection.path!}
+            >
+              New Collection
+            </Button>
+          </HStack>
+        </>
       )}
       <Box>
         <Heading size="lg" my={4}>

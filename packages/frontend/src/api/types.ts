@@ -23,6 +23,11 @@ export interface Collection {
   vods?: Vod[];
 }
 
+export interface CreateCollectionDto {
+  title: string;
+  descMarkdown: string;
+}
+
 export interface Vod {
   id: number;
   title: string;
@@ -67,14 +72,13 @@ export interface UpdateVodDto {
   collectionId?: number;
 }
 
-// todo check if this is correct
 export interface CreateLiveDto {
   title: string;
   descMarkdown: string;
   airDate: Date;
   liveType: "LOCAL_RTMP" | "EMBED_YOUTUBE" | "EMBED_TWITCH";
+  state: "PREMIERE" | "ON_AIR" | "OFF_AIR";
   embedUrl?: string;
-  localRtmpUrl?: string;
   localRtmpStreamKey?: string;
 }
 

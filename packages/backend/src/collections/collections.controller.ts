@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   ParseIntPipe,
   Post,
@@ -13,10 +14,12 @@ import { Collection, User, Vod } from '@prisma/client';
 import { CreateCollectionDto } from './dto/create-collection.dto';
 import { CurrentUser } from 'src/auth/decorator/current-user.decorator';
 import { UpdateCollectionDto } from './dto/update-collection.dto';
+import { JwtAuth } from 'src/auth/decorator/jwt-auth.decorator';
 
 @Controller('collections')
 export class CollectionsController {
   constructor(private readonly collectionsService: CollectionsService) {}
+  private readonly logger = new Logger(CollectionsController.name);
 
   @Get()
   async findAll(): Promise<Collection[]> {
@@ -31,6 +34,7 @@ export class CollectionsController {
   }
 
   @Post()
+  @JwtAuth()
   async create(
     @Body() dto: CreateCollectionDto,
     @CurrentUser() user: User,
@@ -39,22 +43,25 @@ export class CollectionsController {
   }
 
   @Post(':id/add')
+  @JwtAuth()
   async addVod(
     @Param('id', ParseIntPipe) id: number,
-    @Body('vodId') dto: { vodId: number },
+    @Body() dto: { vodId: number },
   ): Promise<Collection> {
     return this.collectionsService.addVod(id, dto.vodId);
   }
 
   @Post(':id/bulk-add')
+  @JwtAuth()
   async bulkAddVods(
     @Param('id', ParseIntPipe) id: number,
-    @Body('vodId') dto: number[],
+    @Body() dto: number[],
   ): Promise<Collection> {
     return this.collectionsService.addVods(id, dto);
   }
 
   @Put(':id')
+  @JwtAuth()
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCollectionDto,
@@ -63,6 +70,7 @@ export class CollectionsController {
   }
 
   @Delete(':id')
+  @JwtAuth()
   async delete(@Param('id', ParseIntPipe) id: number): Promise<Collection> {
     return this.collectionsService.delete(id);
   }

@@ -6561,6 +6561,7 @@ __metadata:
     react-markdown: "npm:9.0.1"
     react-query: "npm:3.39.3"
     react-router-dom: "npm:6.20.1"
+    reregexp: "npm:^1.6.1"
     typescript: "npm:5.3.2"
     vite: "npm:5.0.4"
     vite-plugin-svgr: "npm:4.2.0"
@@ -10102,6 +10103,13 @@ __metadata:
   version: 2.0.2
   resolution: "require-from-string@npm:2.0.2"
   checksum: aaa267e0c5b022fc5fd4eef49d8285086b15f2a1c54b28240fdf03599cbd9c26049fee3eab894f2e1f6ca65e513b030a7c264201e3f005601e80c49fb2937ce2
+  languageName: node
+  linkType: hard
+
+"reregexp@npm:^1.6.1":
+  version: 1.6.1
+  resolution: "reregexp@npm:1.6.1"
+  checksum: e91ef108aece3d11f317782aadccbbf728731495b0e2909175e86c2a51c52103dc2313c862143e8fe85741df4a7bcd7642857219931b553109e37504aa3d5f21
   languageName: node
   linkType: hard
 

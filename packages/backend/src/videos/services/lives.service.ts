@@ -28,6 +28,13 @@ export class LivesService {
     });
   }
 
+  async findAllStreamKeys() {
+    return this.prismaService.live.findMany({
+      where: { localRtmpStreamKey: { not: null } },
+      select: { localRtmpStreamKey: true },
+    });
+  }
+
   async findOne(id: number) {
     return this.prismaService.live.findUniqueOrThrow({
       where: {

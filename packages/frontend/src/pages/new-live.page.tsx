@@ -1,64 +1,60 @@
 import { useAuthContext } from "@/api/contexts/use-auth-context";
-import { CreateVodDto } from "@/api/types";
+import { CreateLiveDto } from "@/api/types";
 import { VideoApi } from "@/api/video.api";
 import { DatetimeField } from "@/components/datetime-field";
-import { FileUpload } from "@/components/file-upload";
 import Layout from "@/components/layout";
 import { RemarkEditor } from "@/components/remark-editor";
 import { SimpleAlert } from "@/components/simple-alert";
 import { TextField } from "@/components/text-field";
 import { queryClient } from "@/main";
-import { Button, Flex, Heading, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  FormLabel,
+  Heading,
+  Radio,
+  RadioGroup,
+  Stack,
+  VStack,
+} from "@chakra-ui/react";
 import { FormProvider, SubmitHandler, useForm } from "react-hook-form";
-import { FaCheck, FaChevronLeft, FaUpload } from "react-icons/fa";
-import { useMutation, useQuery } from "react-query";
+import { FaCheck, FaChevronLeft } from "react-icons/fa";
+import { useMutation } from "react-query";
 import { Navigate, useNavigate } from "react-router-dom";
 
-type UploadMutationParams = { file: File; dto: CreateVodDto };
-type FormParams = { files: FileList | undefined } & CreateVodDto;
-
 export const NewLivePage: React.FC = () => {
-  const { data } = useQuery("folderNames", () =>
-    VideoApi.getInstance().getFolderNames(),
-  );
+  // const { data } = useQuery("streamKeys", () =>
+  //   VideoApi.getInstance().getStreamKeys(),
+  // );
   const { isLoggedIn } = useAuthContext();
   const navigate = useNavigate();
-  const methods = useForm<FormParams>({
+  const methods = useForm<CreateLiveDto>({
     mode: "all",
   });
   const {
     handleSubmit,
     formState: { isValid },
-    setError,
+    register,
   } = methods;
 
-  const mutation = useMutation(
-    ({ file, dto }: UploadMutationParams) =>
-      VideoApi.getInstance().uploadVideo(file, dto),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("videos");
-        navigate("/");
-      },
+  const mutation = useMutation(VideoApi.getInstance().createLive, {
+    onSuccess: () => {
+      queryClient.invalidateQueries("videos");
+      navigate("/");
     },
-  );
+  });
 
-  const onSubmitFile: SubmitHandler<FormParams> = (values) => {
-    const { files, ...dto } = values;
-    if (!files) {
-      setError("files", {
-        type: "custom",
-        message: "Please choose a file to upload.",
-      });
-      return;
-    }
-    const [fileName, ext] = dto.fileName.split(".");
-    mutation.mutate({ file: files[0], dto: { ...dto, fileName, ext } });
+  const onSubmit: SubmitHandler<CreateLiveDto> = (dto) => {
+    console.log(dto);
+    mutation.mutate(dto);
   };
 
   if (!isLoggedIn) {
     return (
-      <Navigate to="/" state={{ alert: "Please log in to upload videos." }} />
+      <Navigate
+        to="/"
+        state={{ alert: "Please log in to start live streams." }}
+      />
     );
   }
 
@@ -68,24 +64,17 @@ export const NewLivePage: React.FC = () => {
         <SimpleAlert
           desc={(mutation.error as Error).message}
           status="error"
-          title="Error confirming upload."
+          title="Error confirming live stream."
         />
       )}
-      <Heading mb={8}>Uploading video as a VoD</Heading>
+      <Heading mb={8}>Starting a live stream</Heading>
       <FormProvider {...methods}>
         <VStack
           align="stretch"
           spacing={8}
           as="form"
-          onSubmit={handleSubmit(onSubmitFile)}
+          onSubmit={handleSubmit(onSubmit)}
         >
-          <FileUpload
-            required
-            fieldName="files"
-            fieldTitle="Video file"
-            buttonIcon={<FaUpload />}
-            helper={<>Choose a video to upload.</>}
-          />
           <TextField
             validationOptions={{
               maxLength: 64,
@@ -100,9 +89,11 @@ export const NewLivePage: React.FC = () => {
             validationOptions={{
               required: true,
             }}
-            fieldName="originalDate"
-            fieldTitle="Original date"
-            helper={<>The original date and time when the video was created.</>}
+            fieldName="airDate"
+            fieldTitle="Air date"
+            helper={
+              <>The airing date and time when the video will be available.</>
+            }
           />
           <RemarkEditor
             formDetails={{
@@ -111,35 +102,48 @@ export const NewLivePage: React.FC = () => {
               maxChar: 1000,
             }}
           />
-          <TextField
+          {/* <TextField
             validationOptions={{
               maxLength: 20,
               minLength: 3,
               required: true,
               pattern: {
                 value: /^[a-z0-9-]+$/,
-                message: "Invalid folder name",
+                message: "Invalid stream key",
               },
-              validate: (value) =>
-                !data?.includes(value) || "Folder name exists",
+              validate: (value) => !data?.includes(value) || "Stream key taken",
             }}
-            fieldName="folderName"
-            fieldTitle="Project name"
-            helper={<>Name of the project (must be a valid folder name).</>}
-          />
+            defaultValue={new ReRegExp(/^[a-z0-9-]{16}$/).build()}
+            fieldName="localRtmpStreamKey"
+            fieldTitle="Stream key"
+            helper={
+              <>Stream key (randomized) for your RTMP streamer endpoint.</>
+            }
+          /> */}
+          <FormLabel htmlFor="liveType">Type of live stream</FormLabel>
+          <Stack
+            as={RadioGroup}
+            {...register("liveType")}
+            defaultValue="EMBED_YOUTUBE"
+          >
+            <Radio value="EMBED_YOUTUBE">Embedded: YouTube</Radio>
+            <Radio value="EMBED_TWITCH">Embedded: Twitch</Radio>
+          </Stack>
+
+          <FormLabel htmlFor="state">Status of the live</FormLabel>
+          <Stack as={RadioGroup} {...register("state")} defaultValue="ON_AIR">
+            <Radio value="PREMIERE">Premiere</Radio>
+            <Radio value="ON_AIR">On air</Radio>
+            <Radio value="OFF_AIR">Off air</Radio>
+          </Stack>
+
           <TextField
             validationOptions={{
-              maxLength: 20,
-              minLength: 3,
               required: true,
-              pattern: {
-                value: /^[a-z0-9-]+\.[a-z0-9]+$/,
-                message: "Invalid file name",
-              },
             }}
-            fieldName="fileName"
-            fieldTitle="File name"
-            helper={<>Rename the uploaded filename.</>}
+            fieldName="embedUrl"
+            fieldTitle="Embedded URL"
+            helper={<>URL of the embedded live stream.</>}
           />
           <Flex justifyContent="space-between" flexWrap="wrap">
             <Button

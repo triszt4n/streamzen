@@ -10,6 +10,8 @@ import { IconType } from "react-icons";
 import { FaCompass, FaHome } from "react-icons/fa";
 import { RouteObject } from "react-router-dom";
 import { AdminSettingsPage } from "@/pages/admin-settings.page";
+import { NewCollectionPage } from "@/pages/new-collection.page";
+import { CollectionPage } from "@/pages/collection.page";
 
 export type NavRouteObject = RouteObject & {
   label?: string;
@@ -50,12 +52,20 @@ export const routeMap: { [name: string]: NavRouteObject } = {
     element: <NewLivePage />,
   },
   createdVideos: {
-    path: "/created-videos",
+    path: "/admin/videos",
     element: <AllVideosPage />,
   },
   adminSettings: {
     path: "/admin/settings",
     element: <AdminSettingsPage />,
+  },
+  newCollection: {
+    path: "/collections/new",
+    element: <NewCollectionPage />,
+  },
+  collection: {
+    path: "/collections/:id",
+    element: <CollectionPage />,
   },
 };
 

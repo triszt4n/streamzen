@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Collection, CreateVodDto, Live, Vod } from "./types";
+import { Collection, CreateLiveDto, CreateVodDto, Live, Vod } from "./types";
 
 export class VideoApi {
   private static instance: VideoApi;
@@ -113,6 +113,11 @@ export class VideoApi {
     return response.data;
   }
 
+  async getStreamKeys(): Promise<string[]> {
+    const response = await axios.get<string[]>("/api/videos/lives/stream-keys");
+    return response.data;
+  }
+
   async uploadVideo(file: File, dto: CreateVodDto): Promise<Vod> {
     const formData = new FormData();
     const savedFileName = `${dto.folderName}_${dto.fileName}.${dto.ext}`;
@@ -126,6 +131,16 @@ export class VideoApi {
 
     const response = await axios.post<Vod>("/api/videos/vods", formData);
     return response.data;
+  }
+
+  async createLive(dto: CreateLiveDto): Promise<Live> {
+    const response = await axios.post<Live>("/api/videos/lives", dto);
+    return {
+      ...response.data,
+      airDate: new Date(response.data.airDate),
+      createdAt: new Date(response.data.createdAt),
+      updatedAt: new Date(response.data.updatedAt),
+    };
   }
 
   async startProcess(id: number): Promise<void> {

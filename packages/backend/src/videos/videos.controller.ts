@@ -68,6 +68,13 @@ export class VideosController {
   }
 
   @JwtAuth()
+  @Get('lives/stream-keys')
+  async getUsedStreamKeys() {
+    const lives = await this.livesService.findAllStreamKeys();
+    return lives.map((video) => video.localRtmpStreamKey);
+  }
+
+  @JwtAuth()
   @Post('vods/:id/processing')
   async startProcess(@Param('id', ParseIntPipe) id: number) {
     return this.processingService.processVideo(id);

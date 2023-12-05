@@ -50,6 +50,10 @@ export class VodsService {
       where: {
         id,
       },
+      include: {
+        createdBy: true,
+        collection: true,
+      },
     });
   }
 
