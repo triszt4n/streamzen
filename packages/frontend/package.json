@@ -25,7 +25,7 @@
     "react-hook-form": "7.48.2",
     "react-icons": "4.12.0",
     "react-markdown": "9.0.1",
-    "react-query": "3.39.3",
+    "@tanstack/react-query": "4.0.5",
     "react-router-dom": "6.20.1",
     "reregexp": "^1.6.1"
   },
